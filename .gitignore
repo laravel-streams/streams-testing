@@ -4,3 +4,4 @@ composer.lock
 /coverage
 /packages
 /node_modules
+.phpunit.cache
