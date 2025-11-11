@@ -12,8 +12,10 @@
         }
     ],
     "require": {
-        "streams/core": "^2.0",
-        "orchestra/testbench": "^7.6"
+        "streams/core": "^2.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.36"
     },
     "autoload": {
         "psr-4": {
