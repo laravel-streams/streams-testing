@@ -55,7 +55,7 @@
         },
         {
             "handle": "gender",
-            "type": "select",
+            "type": "enum",
             "config": {
                 "options": {
                     "male": "Male",
