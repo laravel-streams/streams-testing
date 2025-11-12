@@ -10,93 +10,15 @@ A comprehensive testing package for the Streams platform that provides a pre-con
 - **PHPUnit 10 Support**: Fully compatible with the latest PHPUnit version
 - **Custom TestCase**: Base test case class with built-in utilities for Streams testing
 
-## Installation
+## Quick Start
 
-Install the package via Composer:
+### Installation
 
 ```bash
 composer require streams/testing --dev
 ```
 
-## Usage
-
-### Basic Test Setup
-
-Extend the `Streams\Testing\TestCase` class in your tests:
-
-```php
-<?php
-
-namespace YourApp\Tests;
-
-use Streams\Core\Stream\Stream;
-use Streams\Core\Support\Facades\Streams;
-
-class YourTest extends \Streams\Testing\TestCase
-{
-    public function test_example()
-    {
-        // Access pre-configured test streams
-        $films = Streams::entries('films');
-        
-        $this->assertGreaterThan(0, $films->count());
-    }
-}
-```
-
-### Available Test Data
-
-The package includes the following pre-configured streams with sample data:
-
-- **films** - 7 Star Wars films
-- **people** - Character data
-- **planets** - Planet information
-- **species** - Species data
-- **starships** - Starship details
-- **vehicles** - Vehicle information
-- **files** - File handling examples
-
-### TestCase Features
-
-The base `TestCase` class provides:
-
-- **Automatic Teardown**: Restores streams data after each test
-- **Laravel Integration**: Full Laravel application context via Orchestra Testbench
-- **Application Base Path**: Pre-configured Laravel application structure in `laravel/` directory
-
-### Example Tests
-
-```php
-public function test_loads_testing_streams()
-{
-    $stream = Streams::make('films');
-    
-    $this->assertInstanceOf(Stream::class, $stream);
-}
-
-public function test_queries_stream_entries()
-{
-    $entries = Streams::entries('films')
-        ->where('director', 'George Lucas')
-        ->get();
-    
-    $this->assertNotEmpty($entries);
-}
-
-public function test_creates_new_entry()
-{
-    $entry = Streams::make('films')->create([
-        'title' => 'A New Film',
-        'director' => 'Test Director',
-    ]);
-    
-    $this->assertEquals('A New Film', $entry->title);
-}
-```
-
-## Configuration
-
-The package includes a `phpunit.xml` configuration file. You can customize it for your needs:
+### Create phpunit.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -105,45 +27,144 @@ The package includes a `phpunit.xml` configuration file. You can customize it fo
          bootstrap="vendor/autoload.php"
          colors="true">
     <testsuites>
-        <testsuite name="Your Test Suite">
+        <testsuite name="Tests">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:aiGINJ0oFnqrMGUwJYWJuhe6meZoW+GqppwDJD4YZeM="/>
+    </php>
 </phpunit>
 ```
 
-## Running Tests
+### Write Your First Test
 
-Run your tests using PHPUnit:
+```php
+<?php
 
-```bash
-# Run all tests
-vendor/bin/phpunit
+namespace Tests;
 
-# Run with detailed output
-vendor/bin/phpunit --testdox
+use Streams\Core\Support\Facades\Streams;
 
-# Run specific test file
-vendor/bin/phpunit tests/YourTest.php
+class FilmTest extends \Streams\Testing\TestCase
+{
+    public function test_can_query_films()
+    {
+        $films = Streams::entries('films')->get();
+        
+        $this->assertCount(7, $films);
+    }
+    
+    public function test_can_create_film()
+    {
+        $film = Streams::make('films')->create([
+            'title' => 'New Film',
+            'director' => 'New Director',
+        ]);
+        
+        $this->assertEquals('New Film', $film->title);
+    }
+}
 ```
 
-## How It Works
+### Run Tests
 
-1. **Test Environment**: The package uses Orchestra Testbench to create a full Laravel application context for testing
-2. **Data Management**: Sample streams data is stored in `laravel/streams/` and backed up in `laravel/streams.bak/`
-3. **Automatic Cleanup**: After each test, the `tearDown()` method automatically restores the original test data from the backup
-4. **Laravel Application**: A complete Laravel application structure is provided in the `laravel/` directory with all necessary configuration files
+```bash
+vendor/bin/phpunit
+```
+
+## What's Included
+
+### Test Data
+
+Pre-configured sample streams with Star Wars data:
+
+- **films** - 7 films with directors, release dates, and more
+- **people** - Characters with attributes like homeworld, species
+- **planets** - Planetary data including climate, terrain, population
+- **species** - Species classifications and characteristics
+- **starships** - Starship specifications and capabilities
+- **vehicles** - Vehicle details and stats
+- **files** - File handling examples
+
+### TestCase Features
+
+The base `TestCase` provides:
+
+- Automatic test data restoration after each test
+- Full Laravel application context
+- Orchestra Testbench integration
+- Pre-configured streams environment
+
+### Example Usage
+
+```php
+// Query entries
+$films = Streams::entries('films')
+    ->where('director', 'George Lucas')
+    ->orderBy('release_date')
+    ->get();
+
+// Create entries
+$film = Streams::make('films')->create([
+    'title' => 'A New Film',
+    'director' => 'New Director',
+]);
+
+// Update entries
+$film->update(['director' => 'Updated Director']);
+
+// Delete entries
+$film->delete();
+
+// Count entries
+$count = Streams::entries('films')->count();
+```
+
+## Documentation
+
+Comprehensive documentation is available at `/docs/testing/introduction` (see `docs/00-introduction.md` in this repository):
+
+- **[Introduction](docs/00-introduction.md)** - Overview and key concepts (`/docs/testing/introduction`)
+- **[Installation](docs/01-installation.md)** - Setup and configuration
+- **[Test Data](docs/02-test-data.md)** - Understanding sample streams
+- **[Writing Tests](docs/03-writing-tests.md)** - Test patterns and best practices
+- **[Configuration](docs/04-configuration.md)** - Advanced configuration options
+- **[Troubleshooting](docs/05-troubleshooting.md)** - Common issues and solutions
+
+### Quick Links
+
+- 📚 [Full Streams Documentation](https://streams.dev/docs)
+- 🚀 [Getting Started Guide](docs/01-installation.md)
+- 💡 [Test Examples](docs/03-writing-tests.md)
+- 🔧 [Configuration Guide](docs/04-configuration.md)
+- ❓ [Troubleshooting](docs/05-troubleshooting.md)
 
 ## Requirements
 
 - PHP 8.1 or higher
 - Laravel 10.x or 11.x
 - Streams Core ^2.0
+- PHPUnit 10.x
 
-## Documentation
+## How It Works
 
-For more information about the Streams platform, visit [streams.dev](https://streams.dev/docs).
+1. **Test Environment**: Uses Orchestra Testbench to create a full Laravel application context
+2. **Data Management**: Sample data stored in `laravel/streams/` with backups in `laravel/streams.bak/`
+3. **Automatic Cleanup**: The `tearDown()` method restores original test data after each test
+4. **Laravel Integration**: Complete Laravel application structure in `laravel/` directory
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-The Streams Testing package is open-sourced software licensed under the [MIT license](LICENSE.md)
+The Streams Testing package is open-sourced software licensed under the [MIT license](LICENSE.md).
+
+## Support
+
+- **Documentation**: https://streams.dev/docs/testing/introduction
+- **Issues**: https://github.com/laravel-streams/streams-testing/issues
+- **Discord**: Join the Streams community
