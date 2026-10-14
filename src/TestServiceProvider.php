@@ -8,11 +8,28 @@ class TestServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        # code...
+        //
     }
 
     public function boot()
     {
-        # code
+        if (! $this->app->bound('addons')) {
+            return;
+        }
+
+        $composer = RuntimeApplication::rootComposer();
+        $name = $composer['name'] ?? null;
+
+        if (($composer['type'] ?? null) !== 'streams-addon' || ! is_string($name)) {
+            return;
+        }
+
+        $addons = $this->app->make('addons');
+
+        if ($addons->collection()->has($name)) {
+            return;
+        }
+
+        $addons->load(RuntimeApplication::projectRoot());
     }
 }
