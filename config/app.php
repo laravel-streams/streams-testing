@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Streams\Core\StreamsServiceProvider;
 use Streams\Testing\TestServiceProvider;
@@ -30,6 +31,6 @@ return [
         TestServiceProvider::class,
     ])->toArray(),
 
-    'aliases' => [],
+    'aliases' => Facade::defaultAliases()->toArray(),
 
 ];
