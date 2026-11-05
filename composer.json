@@ -1,6 +1,6 @@
 {
     "name": "streams/testing",
-    "description": "Testing for Streams",
+    "description": "Testing support for Laravel Streams packages.",
     "type": "streams-addon",
     "license": "MIT",
     "prefer-stable": true,
@@ -12,8 +12,12 @@
         }
     ],
     "require": {
-        "streams/core": "^2.0",
-        "orchestra/testbench": "^8.36"
+        "php": "^8.1",
+        "orchestra/testbench": "^8.36|^9.0|^10.0|^11.0",
+        "streams/core": "^2.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.25"
     },
     "autoload": {
         "psr-4": {
@@ -25,12 +29,21 @@
             "Streams\\Testing\\Tests\\": "tests/"
         }
     },
-    "post-autoload-dump": [
-        "@php artisan package:discover --ansi"
-    ],
+    "scripts": {
+        "test": "phpunit"
+    },
     "extra": {
         "branch-alias": {
+            "dev-master": "1.x-dev",
             "dev-1.0": "1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Streams\\Testing\\TestServiceProvider"
+            ]
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

@@ -1,6 +1,0 @@
-.env
-composer.lock
-/vendor
-/coverage
-/packages
-/node_modules
